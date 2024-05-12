@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# pre-prepare
-#curl -O https://ftp.riken.jp/Linux/almalinux/9.4/isos/x86_64/AlmaLinux-9-latest-x86_64-dvd.iso
-
 # repos
 mkdir /root/repos
 mv /etc/yum.repos.d/* /root/repos
@@ -24,8 +21,7 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-AlmaLinux-9
 DVDREPO
 
 cat <<DVDMOUNT >/root/dvd_mount.sh
-mount /dev/sr0 /media
-#mount -o loop /tmp/AlmaLinux*.iso /media
+mount /dev/sr0 /media || mount -o loop /tmp/AlmaLinux*.iso /media
 DVDMOUNT
 sh /root/dvd_mount.sh
 
@@ -44,6 +40,7 @@ sudo
 git
 procps
 gcc
+expect
 ansible-core
 PKGS
 
@@ -54,6 +51,19 @@ firewall-cmd --reload
 # user
 user=yuma
 useradd -m $user
+
+cat <<'USERP' >/tmp/passwd.sh
+#!/bin/sh
+
+user=$1
+expect -c "
+spawn LANG=C passwd $user
+expect Enter\ ;  send $user; send \r
+expect Retype\ ; send $user; send \r;
+expect eof exit 0
+"
+USERP
+sh /tmp/passwd.sh $user
 
 #######################################
 sudo su - $user -c 'whoami'
