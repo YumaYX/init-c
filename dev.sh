@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # pre-prepare
-curl -O https://ftp.riken.jp/Linux/almalinux/9.4/isos/x86_64/AlmaLinux-9-latest-x86_64-dvd.iso
+#curl -O https://ftp.riken.jp/Linux/almalinux/9.4/isos/x86_64/AlmaLinux-9-latest-x86_64-dvd.iso
 
 # repos
 mkdir /root/repos
@@ -24,8 +24,8 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-AlmaLinux-9
 DVDREPO
 
 cat <<DVDMOUNT >/root/dvd_mount.sh
-#mount /tmp/AlmaLinux*.iso /media
-mount -o loop /tmp/AlmaLinux*.iso /media
+mount /dev/sr0 /media
+#mount -o loop /tmp/AlmaLinux*.iso /media
 DVDMOUNT
 sh /root/dvd_mount.sh
 
