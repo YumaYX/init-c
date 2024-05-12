@@ -79,6 +79,7 @@ firewall-cmd --permanent --add-service={nfs3,mountd,rpc-bind}
 firewall-cmd --reload
 systemctl daemon-reload
 ln -s /nfs /work
+rm -rf /work/nfs
 
 # workspace
 mkdir -p /work/{lib,download,data,sandbox,output,bin}
