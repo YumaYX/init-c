@@ -9,6 +9,6 @@ closure
 - development tools
 - ruby
 - httpd
-- ansible (ansible-core only)
+- [ansible-core](https://docs.ansible.com/ansible-core/devel/collections/index_module.html)
 - nfs server
 - workspace
