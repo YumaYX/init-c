@@ -29,7 +29,7 @@ sh /root/dvd_mount.sh
 dnf -y group install development
 dnf -y group install "Server with GUI"
 systemctl set-default graphical.target
-cat <<PKGS | xargs dnf -y
+cat <<PKGS | xargs dnf -y install
 vim
 make
 ruby
@@ -51,19 +51,20 @@ firewall-cmd --reload
 # user
 user=yuma
 useradd -m $user
+echo "${user} ALL=(ALL) ALL" > /etc/sudoers.d/${user}
 
 cat <<'USERP' >/tmp/passwd.sh
 #!/bin/sh
 
 user=$1
 expect -c "
-spawn LANG=C passwd $user
-expect Enter\ ;  send $user; send \r
-expect Retype\ ; send $user; send \r;
+spawn passwd $user
+expect New\ password;  send $user; send \n
+expect Retype\ ; send $user; send \n;
 expect eof exit 0
 "
 USERP
-sh /tmp/passwd.sh $user
+LANG=C sh /tmp/passwd.sh $user
 
 # nfs
 dnf -y install nfs-utils
@@ -81,7 +82,4 @@ ln -s /nfs /work
 
 # workspace
 mkdir -p /work/{lib,download,data,sandbox,output,bin}
-
-#######################################
-sudo su - $user -c 'whoami'
 
