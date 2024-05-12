@@ -65,6 +65,23 @@ expect eof exit 0
 USERP
 sh /tmp/passwd.sh $user
 
+# nfs
+dnf -y install nfs-utils
+echo '/nfs *(rw,no_root_squash)' > /etc/exports
+mkdir /nfs
+chown -R nobody. /nfs
+chmod -R 777 /nfs
+exportfs -av
+systemctl enable --now rpcbind nfs-server
+firewall-cmd --permanent --add-service=nfs
+firewall-cmd --permanent --add-service={nfs3,mountd,rpc-bind}
+firewall-cmd --reload
+systemctl daemon-reload
+ln -s /nfs /work
+
+# workspace
+mkdir -p /work/{lib,download,data,sandbox,output,bin}
+
 #######################################
 sudo su - $user -c 'whoami'
 
