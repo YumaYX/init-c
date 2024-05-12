@@ -1,0 +1,4 @@
+# init-c
+
+c:
+closure
